@@ -1,9 +1,9 @@
 /*
- * Split Screen Rig 1.0
+ * Split Panel Rig 1.0
  * Select two layers (images or footage) in a comp, run this script.
- * It builds a two-panel split controlled by one null.
+ * It builds a two-panel split controlled by one Splitter.
  *
- *   Split Ctrl (null)
+ *   Splitter (null)
  *     position X   the split line. Move or keyframe it.
  *     Gap          space between the panels
  *     Edge Gap     on: the outer margin equals Gap, so edge and middle gaps match
@@ -12,13 +12,13 @@
  *     Parallax     100 = image follows its panel centre, 0 = image stays put
  *                  and the panel slides over it (0 to 100 keeps panels covered)
  *
- * Push the null past an edge and one panel closes while the other fills the frame.
+ * Push the Splitter past an edge and one panel closes while the other fills the frame.
  * Top selected layer = left panel, the other = right panel.
  * Works in After Effects and EffectCraft (File > Scripts > Run Script File...).
  * Made for Key Stage Stories. MIT licence.
  */
 (function () {
-    var CTRL = "Split Ctrl";
+    var CTRL = "Splitter";
 
     function say(msg) {
         try { alert(msg); } catch (e) { }
@@ -34,12 +34,12 @@
     }
     if (imgs.length != 2) return say("Select exactly two image or footage layers.");
     for (var j = 1; j <= comp.numLayers; j++) {
-        if (comp.layer(j).name == CTRL) return say("This comp already has a Split Ctrl.");
+        if (comp.layer(j).name == CTRL) return say("This comp already has a Splitter.");
     }
     imgs.sort(function (a, b) { return a.index - b.index; });
     var imgL = imgs[0], imgR = imgs[1];
 
-    if (app.beginUndoGroup) app.beginUndoGroup("Split Screen Rig");
+    if (app.beginUndoGroup) app.beginUndoGroup("Split Panel Rig");
 
     var W = comp.width, H = comp.height;
 
@@ -90,18 +90,18 @@
             'thisComp.layer("' + CTRL + '").effect("Roundness")(1)';
         return s;
     }
-    var screenL = panel("Screen L", spanL);
-    var screenR = panel("Screen R", spanR);
+    var panelL = panel("Panel L", spanL);
+    var panelR = panel("Panel R", spanR);
 
     // each panel goes directly above its image and mattes it
-    screenL.moveBefore(imgL);
-    screenR.moveBefore(imgR);
+    panelL.moveBefore(imgL);
+    panelR.moveBefore(imgR);
     ctrl.moveToBeginning();
 
-    function fill(img, screen, sp) {
-        if (img.setTrackMatte) img.setTrackMatte(screen, TrackMatteType.ALPHA);
+    function fill(img, panel, sp) {
+        if (img.setTrackMatte) img.setTrackMatte(panel, TrackMatteType.ALPHA);
         else img.trackMatteType = TrackMatteType.ALPHA;
-        screen.enabled = false;
+        panel.enabled = false;
         var tr = img.property("ADBE Transform Group");
         tr.property("ADBE Anchor Point").setValue([img.source.width / 2, img.source.height / 2]);
         tr.property("ADBE Position").expression = head + sp +
@@ -111,8 +111,8 @@
         tr.property("ADBE Scale").expression = head +
             's = Math.max((W - 2*m) / width, (H - 2*m) / height) * 100;\n[s, s]';
     }
-    fill(imgL, screenL, spanL);
-    fill(imgR, screenR, spanR);
+    fill(imgL, panelL, spanL);
+    fill(imgR, panelR, spanR);
 
     for (var k = 1; k <= comp.numLayers; k++) comp.layer(k).selected = false;
     ctrl.selected = true;

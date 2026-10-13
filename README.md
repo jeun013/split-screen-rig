@@ -1,7 +1,7 @@
 # Split Screen Rig
 
-Two-panel split screen for After Effects, controlled by one null.
-Select two layers, run the script, then move the null.
+Two-panel split screen for After Effects, controlled by one layer, the Splitter.
+Select two layers, run the script, then move the Splitter.
 
 ![demo](demo.gif)
 
@@ -9,9 +9,9 @@ Select two layers, run the script, then move the null.
 
 1. Put two images or clips in a comp. Select both. The top one becomes the left panel.
 2. `File > Scripts > Run Script File...` and choose `SplitScreenRig.jsx`.
-3. Move or keyframe **Split Ctrl**'s X position.
+3. Move or keyframe **Splitter**'s X position.
 
-## Controls (on the `Split Ctrl` null)
+## Controls (on the `Splitter` layer)
 
 | Control | What it does |
 |---|---|
@@ -21,7 +21,7 @@ Select two layers, run the script, then move the null.
 | Roundness | Corner radius of both panels |
 | Parallax | 100: the image follows its panel centre. 0: the image stays still and the panel slides over it |
 
-Push the null past either edge and one panel closes while the other fills the frame.
+Push the Splitter past either edge and one panel closes while the other fills the frame.
 Images are scaled to cover the whole inner area, so no image edge shows at any split.
 
 ## Notes
