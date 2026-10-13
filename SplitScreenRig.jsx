@@ -79,8 +79,11 @@
         tr.property("ADBE Position").setValue([0, 0]);
         var cont = s.property("ADBE Root Vectors Group")
             .addProperty("ADBE Vector Group").property("ADBE Vectors Group");
-        var rect = cont.addProperty("ADBE Vector Shape - Rect");
-        cont.addProperty("ADBE Vector Graphic - Fill").property("ADBE Vector Fill Color").setValue([1, 1, 1, 1]);
+        cont.addProperty("ADBE Vector Shape - Rect");
+        cont.addProperty("ADBE Vector Graphic - Fill");
+        // After Effects invalidates handles when a sibling is added, so fetch them again
+        cont.property("ADBE Vector Graphic - Fill").property("ADBE Vector Fill Color").setValue([1, 1, 1, 1]);
+        var rect = cont.property("ADBE Vector Shape - Rect");
         rect.property("ADBE Vector Rect Size").expression = head + sp + '[r - l, H - 2*m]';
         rect.property("ADBE Vector Rect Position").expression = head + sp + '[(l + r)/2, H/2]';
         rect.property("ADBE Vector Rect Roundness").expression =
